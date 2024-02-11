@@ -194,7 +194,7 @@ namespace big
 						}
 
 						g_model_preview_service->stop_preview();
-						ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&veh);
+						// ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&veh); removed for vehicle gifting
 					});
 					ImGui::PopID();
 
