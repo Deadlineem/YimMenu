@@ -55,7 +55,7 @@ namespace big
 				{
 					vehicle::teleport_into_vehicle(veh);
 				}
-				ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&veh);
+				// ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&veh); Removed for vehicle gifting
 			}
 		}
 	};
