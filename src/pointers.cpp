@@ -1237,7 +1237,6 @@ namespace big
             [](memory::handle ptr)
 		    {
 			    g_pointers->m_gta.m_prop_pool = ptr.add(3).rip().as<GenericPool**>();
-			    g_pointers->m_gta.m_pickup_pool = ptr.add(0xE).rip().as<GenericPool**>();
 		    }
         },
         // Vehicle Pool
@@ -1755,6 +1754,15 @@ namespace big
             {
                 g_pointers->m_gta.m_get_ped_seat = ptr.add(1).rip().as<functions::get_ped_seat>();
             }
+        },
+        // RECEIVED_CLONE_REMOVE
+        {
+            "RCR",
+            "48 8B C4 48 89 58 08 48 89 68 10 48 89 70 18 48 89 78 20 41 54 41 56 41 57 48 83 EC 50 4C 8B F2 4D 8B E0",
+            [](memory::handle ptr)
+            {
+                g_pointers->m_gta.m_received_clone_remove = ptr.as<functions::received_clone_remove>();
+            }
         }
         >(); // don't leave a trailing comma at the end
 
@@ -1772,7 +1780,7 @@ namespace big
         // Update instructions: Scan 48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 56 41 57 48 83 EC 40 41 8B E9 and xref it to get to the vtable. Xref the vtable and generate a new signature
         {
             "PD",
-            "48 8D 05 ? ? ? ? 48 8B D9 48 89 01 48 83 C1 08 E8 ? ? ? ? 33 C0",
+            "48 8D 05 ? ? ? ? 48 8B F9 48 89 01 48 83 C1 08 E8 ? ? ? ? 33 C0",
             [](memory::handle ptr)
             {
                 auto presence_data_vft             = ptr.add(3).rip().as<PVOID*>();
