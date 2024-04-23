@@ -4,7 +4,7 @@ namespace big::entity
 {
 	void cage_ped(Ped ped)
 	{
-		Hash hash = RAGE_JOAAT("prop_gold_cont_01");
+		Hash hash = "prop_gold_cont_01"_J;
 
 		Vector3 location = ENTITY::GET_ENTITY_COORDS(ped, true);
 		OBJECT::CREATE_OBJECT(hash, location.x, location.y, location.z - 1.f, true, false, false);
@@ -26,7 +26,10 @@ namespace big::entity
 	void delete_entity(Entity& ent, bool force)
 	{
 		if (!ENTITY::DOES_ENTITY_EXIST(ent))
+		{
+			ent = NULL;
 			return;
+		}
 		if (!force && !take_control_of(ent))
 		{
 			LOG(VERBOSE) << "Failed to take control of entity before deleting";

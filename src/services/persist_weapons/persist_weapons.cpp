@@ -83,7 +83,7 @@ namespace big
 			persist_weapon_loadout = get_loadout(g.persist_weapons.weapon_loadout_file);
 		}
 
-		if (g_local_player == nullptr || g_local_player->m_player_info == nullptr || g_local_player->m_player_info->m_game_state == eGameState::InMPCutscene || STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() || DLC::GET_IS_LOADING_SCREEN_ACTIVE())
+		if (g_local_player == nullptr || g_local_player->m_player_info == nullptr || g_local_player->m_player_info->m_game_state == eGameState::InMPCutscene || STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS() || DLC::GET_IS_LOADING_SCREEN_ACTIVE()) [[unlikely]]
 		{
 			return;
 		}
@@ -115,7 +115,7 @@ namespace big
 			}
 			catch (std::exception& e)
 			{
-				g_notification_service->push_warning("Persist Weapons", "Failed to load JSON file from disk.");
+				g_notification_service.push_warning("Persist Weapons", "Failed to load JSON file from disk.");
 				LOG(WARNING) << "Persist Weapons failed to load JSON file: " << g.persist_weapons.weapon_loadout_file << " because " << e.what();
 			}
 		}
@@ -150,7 +150,7 @@ namespace big
 	{
 		Player player  = self::id;
 		Ped player_ped = self::ped;
-		if (PED::IS_PED_DEAD_OR_DYING(player_ped, true))
+		if (PED::IS_PED_DEAD_OR_DYING(player_ped, true)) [[unlikely]]
 			return;
 
 		for (auto weapon : loadout.weapons)

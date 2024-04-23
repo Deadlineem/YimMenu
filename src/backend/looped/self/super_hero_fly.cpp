@@ -213,7 +213,7 @@ namespace big
 			if (!m_landing && m_flying)
 			{
 				//Negative Z velocity results in gravity assuming we are falling, hence the removal of the parachute.
-				constexpr auto parachute_hash = RAGE_JOAAT("GADGET_PARACHUTE");
+				constexpr auto parachute_hash = "GADGET_PARACHUTE"_J;
 				WEAPON::REMOVE_WEAPON_FROM_PED(self::ped, parachute_hash);
 				detach_delete_vehicle();
 				TASK::CLEAR_PED_TASKS_IMMEDIATELY(self::ped);
@@ -391,7 +391,7 @@ namespace big
 
 		virtual void on_enable() override
 		{
-			g_notification_service->push("SUPER_HERO_FLY"_T.data(), "SUPER_HERO_FLY_ENABLE_NOTIFICATION"_T.data());
+			g_notification_service.push("SUPER_HERO_FLY"_T.data(), "SUPER_HERO_FLY_ENABLE_NOTIFICATION"_T.data());
 		}
 
 		virtual void on_disable() override

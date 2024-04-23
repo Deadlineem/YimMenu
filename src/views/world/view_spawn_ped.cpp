@@ -35,7 +35,7 @@ namespace big
 		{
 			if (selected_ped_weapon_type == SPAWN_PED_ALL_WEAPONS || weapon.m_weapon_type == weapon_type_arr[selected_ped_weapon_type])
 			{
-				if ((selected_ped_weapon_hash == 0 || weapon.m_hash == selected_ped_weapon_hash) && weapon.m_hash != RAGE_JOAAT("WEAPON_UNARMED"))
+				if ((selected_ped_weapon_hash == 0 || weapon.m_hash == selected_ped_weapon_hash) && weapon.m_hash != "WEAPON_UNARMED"_J)
 				{
 					WEAPON::GIVE_WEAPON_TO_PED(ped, weapon.m_hash, 9999, false, selected_ped_weapon_hash != 0);
 				}
@@ -63,7 +63,7 @@ namespace big
 				auto plyr = g_player_service->get_by_id(selected_ped_player_id);
 				if (plyr == nullptr || !plyr->is_valid() || !plyr->get_ped() || !plyr->get_ped()->m_navigation)
 				{
-					g_notification_service->push_error("PED"_T.data(), "INVALID_ONLINE_PED"_T.data());
+					g_notification_service.push_error("PED"_T.data(), "INVALID_ONLINE_PED"_T.data());
 					return 0;
 				}
 
@@ -88,7 +88,7 @@ namespace big
 			auto plyr = g_player_service->get_by_id(selected_ped_for_player_id);
 			if (plyr == nullptr || !plyr->is_valid() || !plyr->get_ped() || !plyr->get_ped()->m_navigation)
 			{
-				g_notification_service->push_error("PED"_T.data(), "INVALID_ONLINE_PED"_T.data());
+				g_notification_service.push_error("PED"_T.data(), "INVALID_ONLINE_PED"_T.data());
 				return 0;
 			}
 
@@ -107,7 +107,7 @@ namespace big
 
 		if (ped == 0)
 		{
-			g_notification_service->push_error("PED"_T.data(), "SPAWN_MODEL_FAILED"_T.data());
+			g_notification_service.push_error("PED"_T.data(), "SPAWN_MODEL_FAILED"_T.data());
 			return 0;
 		}
 
@@ -132,7 +132,7 @@ namespace big
 		PED::SET_PED_SEEING_RANGE(ped, 200.0f);
 		PED::SET_PED_HEARING_RANGE(ped, 200.0f);
 		PED::SET_PED_ID_RANGE(ped, 200.0f);
-		PED::SET_PED_FIRING_PATTERN(ped, RAGE_JOAAT("FIRING_PATTERN_FULL_AUTO"));
+		PED::SET_PED_FIRING_PATTERN(ped, "FIRING_PATTERN_FULL_AUTO"_J);
 		PED::SET_PED_SHOOT_RATE(ped, 150);
 
 		if (!clone)
@@ -177,7 +177,7 @@ namespace big
 			PED::SET_PED_KEEP_TASK(ped, true);
 			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped, true);
 			TASK::TASK_COMBAT_PED(ped, player_ped, 0, 16);
-			PED::SET_PED_RELATIONSHIP_GROUP_HASH(ped, RAGE_JOAAT("HATES_PLAYER"));
+			PED::SET_PED_RELATIONSHIP_GROUP_HASH(ped, "HATES_PLAYER"_J);
 			PED::SET_PED_ALERTNESS(ped, 3);
 		}
 
@@ -292,11 +292,9 @@ namespace big
 						}
 						else if (ImGui::IsItemHovered())
 						{
-							g_fiber_pool->queue_job([] {
-								Ped ped   = self::ped;
-								Hash hash = ENTITY::GET_ENTITY_MODEL(ped);
-								g_model_preview_service->show_ped(hash, ped);
-							});
+							Ped ped   = self::ped;
+							Hash hash = ENTITY::GET_ENTITY_MODEL(ped);
+							g_model_preview_service->show_ped(hash, ped);
 						}
 
 						if (selected_ped_player_id == -1)
@@ -323,15 +321,13 @@ namespace big
 								}
 								else if (ImGui::IsItemHovered())
 								{
-									g_fiber_pool->queue_job([plyr_id] {
-										auto plyr = g_player_service->get_by_id(plyr_id);
-										if (plyr)
-										{
-											Ped ped   = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(plyr->id());
-											Hash hash = ENTITY::GET_ENTITY_MODEL(ped);
-											g_model_preview_service->show_ped(hash, ped);
-										}
-									});
+									auto plyr = g_player_service->get_by_id(plyr_id);
+									if (plyr)
+									{
+										Ped ped   = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(plyr->id());
+										Hash hash = ENTITY::GET_ENTITY_MODEL(ped);
+										g_model_preview_service->show_ped(hash, ped);
+									}
 								}
 								ImGui::PopID();
 
@@ -620,7 +616,7 @@ namespace big
 			{
 				if (!ped::change_player_model(rage::joaat(ped_model_buf)))
 				{
-					g_notification_service->push_error("PED"_T.data(), "SPAWN_MODEL_FAILED"_T.data());
+					g_notification_service.push_error("PED"_T.data(), "SPAWN_MODEL_FAILED"_T.data());
 					return;
 				}
 

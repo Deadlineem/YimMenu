@@ -716,13 +716,9 @@ namespace big
 		case sync_node_id("CPlayerExtendedGameStateNode"):
 			LOG_FIELD(CPlayerExtendedGameStateNode, waypoint_x);
 			LOG_FIELD(CPlayerExtendedGameStateNode, waypoint_y);
-			LOG_FIELD_B(CPlayerExtendedGameStateNode, unk1);
-			LOG_FIELD_B(CPlayerExtendedGameStateNode, unk2);
-			LOG_FIELD_B(CPlayerExtendedGameStateNode, unk3);
-			LOG_FIELD_B(CPlayerExtendedGameStateNode, unk4);
-			LOG_FIELD_B(CPlayerExtendedGameStateNode, unk5);
-			LOG_FIELD_B(CPlayerExtendedGameStateNode, has_waypoint_data);
-			LOG_FIELD_B(CPlayerExtendedGameStateNode, is_waypoint_set);
+			LOG_FIELD(CPlayerExtendedGameStateNode, waypoint_entity);
+			LOG_FIELD(CPlayerExtendedGameStateNode, has_active_waypoint);
+			LOG_FIELD(CPlayerExtendedGameStateNode, owns_waypoint);
 			break;
 		case sync_node_id("CPlayerGameStateDataNode"):
 			LOG_FIELD(CPlayerGameStateDataNode, m_player_state);
@@ -1538,7 +1534,7 @@ namespace big
 				}
 				for (int i = 0; i < game_state_node->m_num_equiped_gadgets; i++)
 				{
-					if (game_state_node->m_gadget_hash[i] != RAGE_JOAAT("gadget_parachute") && game_state_node->m_gadget_hash[i] != RAGE_JOAAT("gadget_nightvision"))
+					if (game_state_node->m_gadget_hash[i] != "gadget_parachute"_J && game_state_node->m_gadget_hash[i] != "gadget_nightvision"_J)
 					{
 						notify::crash_blocked(sender, "invalid gadget");
 						return true;
@@ -1671,7 +1667,7 @@ namespace big
 		static bool init = ([] { sync_node_finder::init(); }(), true);
 
 		veh_creation_model = std::nullopt;
-		if (tree->m_child_node_count && tree->m_next_sync_node && check_node(tree->m_next_sync_node, g.m_syncing_player, object))
+		if (tree->m_child_node_count && tree->m_next_sync_node && check_node(tree->m_next_sync_node, g.m_syncing_player, object)) [[unlikely]]
 		{
 			return false;
 		}

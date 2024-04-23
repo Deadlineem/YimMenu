@@ -45,8 +45,8 @@ namespace big
 		// clang-format off
 		ImGui::BeginDisabled(!*g_pointers->m_gta.m_is_session_started ||
 			gpbd_fm_3->Entries[self::id].BossGoon.Boss != -1 ||
-			gta_util::find_script_thread(RAGE_JOAAT("fm_mission_controller")) ||
-			gta_util::find_script_thread(RAGE_JOAAT("fm_mission_controller_2020")));
+			gta_util::find_script_thread("fm_mission_controller"_J) ||
+			gta_util::find_script_thread("fm_mission_controller_2020"_J));
 		// clang-format on
 		components::command_checkbox<"passive">();
 		ImGui::EndDisabled();
@@ -233,7 +233,6 @@ namespace big
 			g.self.proof_melee     = true;
 			g.self.proof_explosion = true;
 			g.self.proof_steam     = true;
-			g.self.proof_drown     = true;
 			g.self.proof_water     = true;
 		}
 
@@ -247,7 +246,6 @@ namespace big
 			g.self.proof_melee     = false;
 			g.self.proof_explosion = false;
 			g.self.proof_steam     = false;
-			g.self.proof_drown     = false;
 			g.self.proof_water     = false;
 		}
 
@@ -274,7 +272,6 @@ namespace big
 		ImGui::SameLine();
 		ImGui::BeginGroup();
 
-		ImGui::Checkbox("DROWN"_T.data(), &g.self.proof_drown);
 		ImGui::Checkbox("WATER"_T.data(), &g.self.proof_water);
 
 		ImGui::EndGroup();
@@ -407,10 +404,6 @@ namespace big
 		if (g.self.proof_steam)
 		{
 			g.self.proof_mask |= static_cast<int>(eEntityProofs::STEAM);
-		}
-		if (g.self.proof_drown)
-		{
-			g.self.proof_mask |= static_cast<int>(eEntityProofs::DROWN);
 		}
 		if (g.self.proof_water)
 		{

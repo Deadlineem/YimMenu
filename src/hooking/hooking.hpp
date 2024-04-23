@@ -191,6 +191,10 @@ namespace big
 		static bool sync_reader_serialize_vec3(void* _this, rage::fvector3* vec, float divisor, int size);
 		static bool sync_reader_serialize_vec3_signed(void* _this, rage::fvector3* vec, float divisor, int size);
 		static bool sync_reader_serialize_array(void* _this, void* array, int size);
+
+		static bool can_create_vehicle();
+
+		static void format_int(int64_t integer_to_format, char* format_string, size_t size_always_64, bool use_commas);
 	};
 
 	class minhook_keepalive
