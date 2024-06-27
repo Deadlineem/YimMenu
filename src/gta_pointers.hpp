@@ -58,8 +58,6 @@ namespace big
 
 		memory::handle m_creator_warp_cheat_triggered_patch;
 
-		memory::handle m_sound_overload_detour;
-
 		memory::handle m_disable_collision;
 
 		memory::handle m_crash_trigger;
@@ -362,7 +360,7 @@ namespace big
 		functions::can_create_vehicle m_can_create_vehicle;
 
 		PVOID m_format_int;
-    
+
 		PVOID m_searchlight_crash;
 		functions::get_searchlight m_get_searchlight;
 
