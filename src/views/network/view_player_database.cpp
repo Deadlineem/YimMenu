@@ -17,10 +17,10 @@ namespace big
 	char note_buffer[1024];
 	bool notes_dirty = false;
 	std::shared_ptr<persistent_player> current_player;
-	bool filter_modder                            = false;
-	bool filter_trust                             = false;
-	bool filter_block_join                        = false;
-	bool filter_track_player                      = false;
+	bool filter_modder       = false;
+	bool filter_trust        = false;
+	bool filter_block_join   = false;
+	bool filter_track_player = false;
 
 	ImVec4 get_player_color(persistent_player& player)
 	{
@@ -153,18 +153,26 @@ namespace big
 
 				if (ImGui::BeginCombo("BLOCK_JOIN_ALERT"_T.data(), block_join_reasons[current_player->block_join_reason]))
 				{
-					for (const auto& reason : block_join_reasons)
+					block_join_reason_t i = block_join_reason_t::None;
+					for (const auto& reason_str : block_join_reasons)
 					{
-						if (ImGui::Selectable(reason.second, reason.first == current_player->block_join_reason))
+						if (reason_str != "")
 						{
-							current_player->block_join_reason = reason.first;
-							g_player_database_service->save();
+							const bool is_selected = current_player->block_join_reason == i;
+
+							if (ImGui::Selectable(reason_str, is_selected))
+							{
+								current_player->block_join_reason = i;
+								g_player_database_service->save();
+							}
+
+							if (is_selected)
+							{
+								ImGui::SetItemDefaultFocus();
+							}
 						}
 
-						if (reason.first == current_player->block_join_reason)
-						{
-							ImGui::SetItemDefaultFocus();
-						}
+						i++;
 					}
 
 					ImGui::EndCombo();
@@ -255,19 +263,33 @@ namespace big
 					});
 				};
 
-				ImGui::Text(std::format("{}: {}", "VIEW_NET_PLAYER_DB_SESSION_TYPE"_T, player_database_service::get_session_type_str(selected->session_type)).c_str());
+				ImGui::Text(std::format("{}: {}",
+				    "VIEW_NET_PLAYER_DB_SESSION_TYPE"_T,
+				    player_database_service::get_session_type_str(selected->session_type))
+				                .c_str());
 
 				if (selected->session_type != GSType::Invalid && selected->session_type != GSType::Unknown)
 				{
-					ImGui::Text(std::format("{}: {}", "VIEW_NET_PLAYER_DB_IS_HOST_OF_SESSION"_T, selected->is_host_of_session ? "YES"_T : "NO"_T).c_str());
-					ImGui::Text(std::format("{}: {}", "VIEW_NET_PLAYER_DB_IS_SPECTATING"_T, selected->is_spectating ? "YES"_T : "NO"_T).c_str());
-					ImGui::Text(std::format("{}: {}", "VIEW_NET_PLAYER_DB_IN_JOB_LOBBY"_T, selected->transition_session_id != -1 ? "YES"_T : "NO"_T).c_str());
-					ImGui::Text(std::format("{}: {}", "VIEW_NET_PLAYER_DB_IS_HOST_OF_JOB_LOBBY"_T, selected->is_host_of_transition_session ? "YES"_T : "NO"_T).c_str());
-					ImGui::Text(std::format("{}: {}", "VIEW_NET_PLAYER_DB_CURRENT_MISSION_TYPE"_T, player_database_service::get_game_mode_str(selected->game_mode)).c_str());
+					ImGui::Text(std::format("{}: {}", "VIEW_NET_PLAYER_DB_IS_HOST_OF_SESSION"_T, selected->is_host_of_session ? "YES"_T : "NO"_T)
+					                .c_str());
+					ImGui::Text(std::format("{}: {}", "VIEW_NET_PLAYER_DB_IS_SPECTATING"_T, selected->is_spectating ? "YES"_T : "NO"_T)
+					                .c_str());
+					ImGui::Text(std::format("{}: {}", "VIEW_NET_PLAYER_DB_IN_JOB_LOBBY"_T, selected->transition_session_id != -1 ? "YES"_T : "NO"_T)
+					                .c_str());
+					ImGui::Text(std::format("{}: {}", "VIEW_NET_PLAYER_DB_IS_HOST_OF_JOB_LOBBY"_T, selected->is_host_of_transition_session ? "YES"_T : "NO"_T)
+					                .c_str());
+					ImGui::Text(std::format("{}: {}",
+					    "VIEW_NET_PLAYER_DB_CURRENT_MISSION_TYPE"_T,
+					    player_database_service::get_game_mode_str(selected->game_mode))
+					                .c_str());
 					if (selected->game_mode != GameMode::None && player_database_service::can_fetch_name(selected->game_mode))
 					{
-						ImGui::Text(std::format("{}: {}", "VIEW_NET_PLAYER_DB_CURRENT_MISSION_NAME"_T.data(), selected->game_mode_name.c_str()).c_str());
-						if ((selected->game_mode_name == "VIEW_NET_PLAYER_DB_GAME_MODE_UNKNOWN"_T.data() || selected->game_mode_name.empty())
+						ImGui::Text(std::format("{}: {}",
+						    "VIEW_NET_PLAYER_DB_CURRENT_MISSION_NAME"_T.data(),
+						    selected->game_mode_name.c_str())
+						                .c_str());
+						if ((selected->game_mode_name == "VIEW_NET_PLAYER_DB_GAME_MODE_UNKNOWN"_T.data()
+						        || selected->game_mode_name.empty())
 						    && !selected->game_mode_id.empty())
 						{
 							ImGui::SameLine();
