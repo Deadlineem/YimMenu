@@ -1,13 +1,14 @@
 #include "entity.hpp"
+
 #include "gta/joaat.hpp"
+#include "gta/net_object_mgr.hpp"
 #include "gta_util.hpp"
 #include "math.hpp"
 #include "natives.hpp"
+#include "packet.hpp"
 #include "pools.hpp"
 #include "script.hpp"
 #include "services/players/player_service.hpp"
-#include "packet.hpp"
-#include "gta/net_object_mgr.hpp"
 
 #include <entities/CDynamicEntity.hpp>
 
@@ -55,10 +56,14 @@ namespace big::entity
 			ent = NULL;
 			return;
 		}
-		if (!force && !take_control_of(ent))
+
+		if (auto ptr = g_pointers->m_gta.m_handle_to_ptr(ent))
 		{
-			LOG(VERBOSE) << "Failed to take control of entity before deleting";
-			return;
+			if (ptr->m_net_object)
+			{
+				force_remove_network_entity(ptr, true);
+				return;
+			}
 		}
 
 		if (ENTITY::IS_ENTITY_A_VEHICLE(ent))

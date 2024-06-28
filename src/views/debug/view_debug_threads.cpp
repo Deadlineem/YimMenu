@@ -45,7 +45,8 @@ namespace big
 
 			components::small_text("VIEW_DEBUG_THREADS"_T);
 
-			if (ImGui::BeginCombo("VIEW_DEBUG_THREADS_THREAD"_T.data(), selected_thread ? selected_thread->m_name : "VIEW_DEBUG_THREADS_SELECTED_NONE"_T.data()))
+			if (ImGui::BeginCombo("VIEW_DEBUG_THREADS_THREAD"_T.data(),
+			        selected_thread ? selected_thread->m_name : "VIEW_DEBUG_THREADS_SELECTED_NONE"_T.data()))
 			{
 				for (auto script : *g_pointers->m_gta.m_script_threads)
 				{
@@ -101,7 +102,9 @@ namespace big
 				    + std::string("VIEW_DEBUG_THREADS_STATE_2"_T.data()) + '\0'
 				    + std::string("VIEW_DEBUG_THREADS_STATE_3"_T.data()) + '\0'
 				    + std::string("VIEW_DEBUG_THREADS_STATE_4"_T.data()) + '\0';
-				ImGui::Combo("VIEW_DEBUG_THREADS_STATE"_T.data(), (int*)&selected_thread->m_context.m_state, thread_states.c_str());
+				ImGui::Combo("VIEW_DEBUG_THREADS_STATE"_T.data(),
+				    (int*)&selected_thread->m_context.m_state,
+				    thread_states.c_str());
 				//Script Pointer
 				ImGui::Text(std::format("{}: ", "VIEW_DEBUG_THREADS_SCRIPT_POINTER"_T).c_str());
 				ImGui::SameLine();
@@ -114,15 +117,20 @@ namespace big
 					ImGui::SetClipboardText(std::format("0x{:X}", (DWORD64)selected_thread->m_stack).c_str());
 				ImGui::SameLine();
 				ImGui::Text(std::format("{}: {} {}: {}",
-				    "VIEW_DEBUG_THREADS_INTERNAL_STACK_POINTER"_T, selected_thread->m_context.m_stack_pointer,
-				    "VIEW_DEBUG_THREADS_STACK_SIZE"_T, selected_thread->m_context.m_stack_size)
+				    "VIEW_DEBUG_THREADS_INTERNAL_STACK_POINTER"_T,
+				    selected_thread->m_context.m_stack_pointer,
+				    "VIEW_DEBUG_THREADS_STACK_SIZE"_T,
+				    selected_thread->m_context.m_stack_size)
 				                .c_str());
 				//Instruction Pointer
-				ImGui::Text(std::format("{}: 0x{:X}","VIEW_DEBUG_THREADS_INSTRUCTION_POINTER"_T, selected_thread->m_context.m_instruction_pointer).c_str());
+				ImGui::Text(
+				    std::format("{}: 0x{:X}", "VIEW_DEBUG_THREADS_INSTRUCTION_POINTER"_T, selected_thread->m_context.m_instruction_pointer)
+				        .c_str());
 
 				if (selected_thread->m_context.m_state == rage::eThreadState::killed)
 				{
-					ImGui::Text(std::format("{}: {}","VIEW_DEBUG_THREADS_EXIT_REASON"_T, selected_thread->m_exit_message).c_str());
+					ImGui::Text(
+					    std::format("{}: {}", "VIEW_DEBUG_THREADS_EXIT_REASON"_T, selected_thread->m_exit_message).c_str());
 				}
 				else
 				{
@@ -185,7 +193,8 @@ namespace big
 
 				if (MISC::GET_NUMBER_OF_FREE_STACKS_OF_THIS_SIZE(selected_stack_size) == 0)
 				{
-					g_notification_service.push_warning("VIEW_DEBUG_THREADS"_T.data(), "VIEW_DEBUG_THREADS_NO_FREE_STACKS"_T.data());
+					g_notification_service.push_warning("VIEW_DEBUG_THREADS"_T.data(),
+					    "VIEW_DEBUG_THREADS_NO_FREE_STACKS"_T.data());
 				}
 
 				while (!SCRIPT::HAS_SCRIPT_WITH_NAME_HASH_LOADED(hash))
@@ -209,11 +218,12 @@ namespace big
 
 				if (idx == -1)
 				{
-					g_notification_service.push_warning("VIEW_DEBUG_THREADS"_T.data(), "VIEW_DEBUG_THREADS_FAILED_WITH_LAUNCHER"_T.data());
+					g_notification_service.push_warning("VIEW_DEBUG_THREADS"_T.data(),
+					    "VIEW_DEBUG_THREADS_FAILED_WITH_LAUNCHER"_T.data());
 					return;
 				}
 
-				scripts::start_launcher_script(idx);
+				scripts::start_launcher_script(hash);
 			});
 
 			if (*g_pointers->m_gta.m_game_state != eGameState::Invalid && std::chrono::high_resolution_clock::now() - last_stack_update_time > 100ms)

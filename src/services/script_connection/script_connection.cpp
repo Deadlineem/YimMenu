@@ -47,7 +47,7 @@ namespace big
 			if (m_debug_logging)
 				LOG(VERBOSE) << "Starting " << m_script_name << " using am_launcher";
 
-			scripts::start_launcher_script(scripts::launcher_index_from_hash(m_script_hash));
+			scripts::start_launcher_script(m_script_hash);
 		}
 		else
 		{
@@ -68,7 +68,9 @@ namespace big
 			for (int i = 0; i < 2; i++)
 			{
 				const size_t arg_count_2    = 26;
-				int64_t args_2[arg_count_2] = {(int64_t)eRemoteEvent::StartScriptProceed, (int64_t)self::id, 1 << m_target->get()->id()};
+				int64_t args_2[arg_count_2] = {(int64_t)eRemoteEvent::StartScriptProceed,
+				    (int64_t)self::id,
+				    1 << m_target->get()->id()};
 				args_2[3 + 17]              = 1337;
 				g_pointers->m_gta.m_trigger_script_event(1, args_2, arg_count_2, 1 << m_target->get()->id(), (int)eRemoteEvent::StartScriptProceed);
 
